@@ -20,35 +20,21 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake build-essential libgtest-dev
-          sudo apt install libboost-system-dev libboost-filesystem-dev \
-                 libboost-regex-dev libboost-program-options-dev
-
-      #- name: Build and install GTest
-      #  run: |
-      #    cd /usr/src/gtest
-      #    sudo cmake CMakeLists.txt
-      #    sudo make
-      #    sudo cp lib/*.a /usr/lib
+          sudo apt-get install -y cmake build-essential
+          sudo apt-get install -y libboost-system-dev
+          sudo apt-get install -y libsqlite3-dev
       
       - name: Configure CMake
-        run: cmake -B build -DPATCH_VERSION=${{ github.run_number }}
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release -DPATCH_VERSION=${{ github.run_number }}
+        working-directory: .
 
       - name: Build project
-        run: cmake --build build
+        run: cmake --build build --target all -j$(nproc)
+        working-directory: .
         
-      #- name: Run tests
-      #  run: |
-      #    cd build
-      #    ctest --verbose
-          
-      #- name: Run main application
-      #  run: |
-      #    cd build
-      #    ./async_cli
-
       - name: Create package
         run: cmake --build build --target package
+        working-directory: .
 
       - name: Create Release
         if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/github_actions')
@@ -62,11 +48,6 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Rename package
-        run: |
-          cd build
-          mv join_server-0.0.${{ github.run_number }}-Linux.deb join_server.deb
-
       - name: Upload Release Asset
         if: steps.create_release.outputs.id != ''
         uses: actions/upload-release-asset@v1
@@ -74,6 +55,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/join_server.deb
-          asset_name: join_server.deb
+          asset_path: ./build/join_server-0.0.${{ github.run_number }}-Linux.deb
+          asset_name: join_server-${{ github.run_number }}.deb
           asset_content_type: application/vnd.debian.binary-package
