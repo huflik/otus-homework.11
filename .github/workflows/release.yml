@@ -24,12 +24,12 @@ jobs:
           sudo apt install libboost-system-dev libboost-filesystem-dev \
                  libboost-regex-dev libboost-program-options-dev
 
-      #- name: Build and install GTest
-      #  run: |
-      #    cd /usr/src/gtest
-      #    sudo cmake CMakeLists.txt
-      #    sudo make
-      #    sudo cp lib/*.a /usr/lib
+      - name: Build and install GTest
+        run: |
+          cd /usr/src/gtest
+          sudo cmake CMakeLists.txt
+          sudo make
+          sudo cp lib/*.a /usr/lib
       
       - name: Configure CMake
         run: cmake -B build -DPATCH_VERSION=${{ github.run_number }}
@@ -37,15 +37,15 @@ jobs:
       - name: Build project
         run: cmake --build build
         
-      #- name: Run tests
-      #  run: |
-      #    cd build
-      #    ctest --verbose
+      - name: Run tests
+        run: |
+          cd build
+          ctest --verbose
           
       #- name: Run main application
       #  run: |
       #    cd build
-      #    ./async_cli
+      #    ./join_server
 
       - name: Create package
         run: cmake --build build --target package
@@ -76,6 +76,4 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./build/join_server.deb
           asset_name: join_server.deb
-          asset_content_type: application/vnd.debian.binary-package
-          asset_name: join_server-${{ github.run_number }}.deb
           asset_content_type: application/vnd.debian.binary-package
