@@ -13,7 +13,7 @@ add_compile_options(-Wall -Wextra -Wpedantic -Wno-unused-parameter)
 
 find_package(Boost 1.65.0 COMPONENTS system REQUIRED)
 
-set(SQLITE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/dms")
+set(SQLITE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/dbms")
 
 add_library(sqlite STATIC ${SQLITE_DIR}/sqlite3.c)
 target_include_directories(sqlite PUBLIC ${SQLITE_DIR})
