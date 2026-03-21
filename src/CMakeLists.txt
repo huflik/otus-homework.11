@@ -49,5 +49,5 @@ target_include_directories(join_server
 
 set_target_properties(join_server PROPERTIES 
     OUTPUT_NAME ${PROJECT_NAME}
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
 )
