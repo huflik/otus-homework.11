@@ -22,7 +22,7 @@ private:
     void HandleCommand(const std::string& cmd);
     
     boost::asio::ip::tcp::socket socket_;
-    char buffer_data_[1024];
+    char buffer_data_[16384] = {0};
     std::string command_buffer_;
     Parser parser_;
     bool waitingForResponse_;

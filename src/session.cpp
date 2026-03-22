@@ -36,11 +36,7 @@ void Session::Read()
                 while ((pos = command_buffer_.find('\n')) != std::string::npos) {
                     std::string command = command_buffer_.substr(0, pos);
                     command_buffer_.erase(0, pos + 1);
-                    
-                    if (!command.empty() && command.back() == '\r') {
-                        command.pop_back();
-                    }
-                    
+                                      
                     if (!command.empty()) {
                         HandleCommand(command);
                     }
@@ -60,8 +56,8 @@ void Session::Write(const std::string& response)
     
     boost::asio::async_write(socket_, boost::asio::buffer(*response_copy),
         [this, self, response_copy](boost::system::error_code ec, std::size_t) {
-            if (!ec) {
-                waitingForResponse_ = false;
+            waitingForResponse_ = false;
+            if (!ec) {     
                 Read();
             } else if (ec != boost::asio::error::operation_aborted) {
                 std::cerr << "Write error: " << ec.message() << std::endl;
@@ -72,7 +68,7 @@ void Session::Write(const std::string& response)
 void Session::HandleCommand(const std::string& cmd)
 {
     ParseResult parseResult = parser_.Parse(cmd);
-    
+
     if (parseResult.IsError()) {
         Write(parseResult.result.toString() + "\n");
         return;
@@ -82,9 +78,9 @@ void Session::HandleCommand(const std::string& cmd)
     
     ExecutionResult execResult = DbManager::GetInstance().Execute(parseResult.command, parseResult.tokens);
     
-    if (execResult.result.isError()) {
+    if (execResult.result.IsError()) {
         Write(execResult.result.toString() + "\n");
-    } else if (execResult.result.isLoad()) {
+    } else if (execResult.result.IsLoad()) {
         Write(execResult.data + "< OK\n");
     } else {
         Write("< OK\n");

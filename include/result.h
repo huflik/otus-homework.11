@@ -17,9 +17,9 @@ struct Result
     Result(Error e, const std::string& msg = "") 
         : status(Status::ERROR), error(e), errorMessage(msg) {}
     
-    bool isOk() const { return status == Status::OK; }
-    bool isError() const { return status == Status::ERROR; }
-    bool isLoad() const { return status == Status::LOAD; }
+    bool IsOk() const { return status == Status::OK; }
+    bool IsError() const { return status == Status::ERROR; }
+    bool IsLoad() const { return status == Status::LOAD; }
     
     std::string toString() const {
         if (status == Status::OK) {
@@ -45,8 +45,8 @@ struct ParseResult
         : command(cmd), tokens(tok) {}
     ParseResult(const Result& res) : command(Command::UNKNOWN), result(res) {}
     
-    bool IsValid() const { return result.isOk(); }
-    bool IsError() const { return result.isError(); }
+    bool IsValid() const { return result.IsOk(); }
+    bool IsError() const { return result.IsError(); }
 };
 
 struct ExecutionResult
