@@ -20,6 +20,8 @@ target_include_directories(sqlite PUBLIC ${SQLITE_DIR})
 
 add_subdirectory(src)
 
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+
 set(CPACK_GENERATOR "DEB")
 set(CPACK_PACKAGE_VENDOR "oflika256")
 set(CPACK_PACKAGE_CONTACT "oflika256@gmail.com")
